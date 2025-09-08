@@ -1,0 +1,90 @@
+# Project Nova - Credit Scoring Configuration
+
+# Data Configuration
+data:
+  drivers_path: "data/grab_drivers_dataset_refined_score.csv"
+  merchants_path: "data/grab_merchants_dataset_refined_score.csv"
+  target_column: "credit_score"
+  test_size: 0.2
+  validation_size: 0.2
+  random_state: 42
+
+models:
+  xgboost:
+    n_estimators: [100, 200, 500, 1000]
+    max_depth: [3, 6, 10, 15]
+    learning_rate: [0.01, 0.1, 0.2, 0.3]
+    subsample: [0.8, 0.9, 1.0]
+    colsample_bytree: [0.8, 0.9, 1.0]
+    
+  lightgbm:
+    n_estimators: [100, 200, 500, 1000]
+    max_depth: [3, 6, 10, 15]
+    learning_rate: [0.01, 0.1, 0.2, 0.3]
+    subsample: [0.8, 0.9, 1.0]
+    colsample_bytree: [0.8, 0.9, 1.0]
+    
+  catboost:
+    iterations: [100, 200, 500, 1000]
+    depth: [3, 6, 10]
+    learning_rate: [0.01, 0.1, 0.2, 0.3]
+    
+  neural_network:
+    hidden_layers: [[64, 32], [128, 64, 32], [256, 128, 64]]
+    dropout_rate: [0.2, 0.3, 0.5]
+    learning_rate: [0.001, 0.01, 0.1]
+    batch_size: [32, 64, 128]
+    epochs: [50, 100, 200]
+
+# Fairness Configuration
+fairness:
+  protected_attributes: ["gender", "ethnicity", "age_group"]
+  fairness_metrics:
+    - "demographic_parity"
+    - "equalized_odds" 
+    - "equal_opportunity"
+    - "individual_fairness"
+  
+  bias_mitigation:
+    pre_processing: ["reweighing", "disparate_impact_remover"]
+    in_processing: ["adversarial_debiasing"]
+    post_processing: ["equalized_odds", "reject_option_classification"]
+
+# Evaluation Configuration
+evaluation:
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1_score"
+    - "roc_auc"
+    - "precision_recall_auc"
+    - "mean_squared_error"
+    - "mean_absolute_error"
+    - "r2_score"
+  
+  cross_validation:
+    cv_folds: 5
+    scoring: "roc_auc"
+
+# Visualization Configuration
+visualization:
+  plot_formats: ["png", "pdf", "svg"]
+  dpi: 300
+  figsize: [12, 8]
+  style: "seaborn-v0_8"
+
+# Hyperparameter Tuning
+hyperparameter_tuning:
+  method: "optuna"  # optuna, hyperopt, grid_search, random_search
+  n_trials: 100
+  timeout: 3600  # seconds
+  
+# Paths
+paths:
+  models: "models/"
+  checkpoints: "models/checkpoints/"
+  saved_models: "models/saved_models/"
+  results: "results/"
+  plots: "results/plots/"
+  logs: "logs/"

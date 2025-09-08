@@ -1,0 +1,128 @@
+{
+  "gender": {
+    "demographic_parity": {
+      "demographic_parity_difference": 0.013567836875133493,
+      "demographic_parity_ratio": 0.9474314984230657,
+      "group_0": 0.24679061531651172,
+      "group_1": 0.24453038674033148,
+      "group_2": 0.258098223615465
+    },
+    "equalized_odds": {
+      "equalized_odds_tpr_difference": 0.003161319870993884,
+      "equalized_odds_fpr_difference": 0.0,
+      "equalized_odds_average_difference": 0.001580659935496942,
+      "group_0_tpr": 0.9937611408199644,
+      "group_1_tpr": 0.9905998209489705,
+      "group_2_tpr": 0.9919678714859438,
+      "group_0_fpr": 0.0,
+      "group_1_fpr": 0.0,
+      "group_2_fpr": 0.0
+    },
+    "equal_opportunity": {
+      "equal_opportunity_difference": 0.003161319870993884,
+      "group_0_tpr": 0.9937611408199644,
+      "group_1_tpr": 0.9905998209489705,
+      "group_2_tpr": 0.9919678714859438
+    },
+    "individual_fairness": {
+      "individual_fairness_violation": 87.61048838173005,
+      "individual_fairness_std": 44.36597139650302,
+      "individual_fairness_max_violation": 371.202257424968
+    },
+    "calibration": {
+      "calibration_difference": 0.06060589189889924,
+      "group_0_calibration_error": 0.09444316443471053,
+      "group_1_calibration_error": 0.12841964561091004,
+      "group_2_calibration_error": 0.15504905633360977
+    }
+  },
+  "ethnicity": {
+    "demographic_parity": {
+      "demographic_parity_difference": 0.024237079711218024,
+      "demographic_parity_ratio": 0.9056256965973271,
+      "group_0": 0.2568186342823014,
+      "group_1": 0.23258155457108337,
+      "group_2": 0.251573564122738,
+      "group_3": 0.24619443880657602
+    },
+    "equalized_odds": {
+      "equalized_odds_tpr_difference": 0.00048430718913139437,
+      "equalized_odds_fpr_difference": 0.0,
+      "equalized_odds_average_difference": 0.00024215359456569718,
+      "group_0_tpr": 0.9923076923076923,
+      "group_1_tpr": 0.9922680412371134,
+      "group_2_tpr": 0.9922420480993018,
+      "group_3_tpr": 0.9918233851185609,
+      "group_0_fpr": 0.0,
+      "group_1_fpr": 0.0,
+      "group_2_fpr": 0.0,
+      "group_3_fpr": 0.0
+    },
+    "equal_opportunity": {
+      "equal_opportunity_difference": 0.00048430718913139437,
+      "group_0_tpr": 0.9923076923076923,
+      "group_1_tpr": 0.9922680412371134,
+      "group_2_tpr": 0.9922420480993018,
+      "group_3_tpr": 0.9918233851185609
+    },
+    "individual_fairness": {
+      "individual_fairness_violation": 87.85156030905114,
+      "individual_fairness_std": 38.70610822213747,
+      "individual_fairness_max_violation": 357.05018010226536
+    },
+    "calibration": {
+      "calibration_difference": 0.08094975345611602,
+      "group_0_calibration_error": 0.15685348329584486,
+      "group_1_calibration_error": 0.1419684158432517,
+      "group_2_calibration_error": 0.1638912068812374,
+      "group_3_calibration_error": 0.08294145342512138
+    }
+  },
+  "age_group": {
+    "demographic_parity": {
+      "demographic_parity_difference": 0.013694437597567971,
+      "demographic_parity_ratio": 0.9463722651222652,
+      "group_0": 0.25536110426423464,
+      "group_1": 0.24926108374384237,
+      "group_2": 0.24166666666666667,
+      "group_3": 0.2422907488986784,
+      "group_4": 0.24543610547667344
+    },
+    "equalized_odds": {
+      "equalized_odds_tpr_difference": 0.009314776019969995,
+      "equalized_odds_fpr_difference": 0.0,
+      "equalized_odds_average_difference": 0.004657388009984997,
+      "group_0_tpr": 0.9923371647509579,
+      "group_1_tpr": 0.9960629921259843,
+      "group_2_tpr": 0.9939516129032258,
+      "group_3_tpr": 0.9915164369034994,
+      "group_4_tpr": 0.9867482161060143,
+      "group_0_fpr": 0.0,
+      "group_1_fpr": 0.0,
+      "group_2_fpr": 0.0,
+      "group_3_fpr": 0.0,
+      "group_4_fpr": 0.0
+    },
+    "equal_opportunity": {
+      "equal_opportunity_difference": 0.009314776019969995,
+      "group_0_tpr": 0.9923371647509579,
+      "group_1_tpr": 0.9960629921259843,
+      "group_2_tpr": 0.9939516129032258,
+      "group_3_tpr": 0.9915164369034994,
+      "group_4_tpr": 0.9867482161060143
+    },
+    "individual_fairness": {
+      "individual_fairness_violation": 88.1869493328,
+      "individual_fairness_std": 37.24130105110894,
+      "individual_fairness_max_violation": 331.48112991885864
+    },
+    "calibration": {
+      "calibration_difference": 0.08130204059222024,
+      "group_0_calibration_error": 0.1028015805439452,
+      "group_1_calibration_error": 0.18410362113616544,
+      "group_2_calibration_error": 0.11242304565421932,
+      "group_3_calibration_error": 0.1203414794470632,
+      "group_4_calibration_error": 0.10492144917635642
+    }
+  }
+}

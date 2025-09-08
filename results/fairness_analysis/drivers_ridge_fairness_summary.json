@@ -1,0 +1,24 @@
+{
+  "gender": {
+    "dp_difference": 0.005181641944933618,
+    "eo_difference": 0.01542157888492196,
+    "eop_difference": 0.03084315776984392,
+    "if_violation": 85.67714550685122,
+    "cal_difference": 4.7587276938046585
+  },
+  "ethnicity": {
+    "dp_difference": 0.021202268196982565,
+    "eo_difference": 0.008687706445498378,
+    "eop_difference": 0.017375412890996755,
+    "if_violation": 85.88716369422617,
+    "cal_difference": 21.141729391082215
+  },
+  "age_group": {
+    "dp_difference": 0.01713238481456686,
+    "eo_difference": 0.023988257201794705,
+    "eop_difference": 0.04797651440358941,
+    "if_violation": 86.17253553713915,
+    "cal_difference": 2.81792781674919
+  },
+  "overall_fairness_score": 0.945298219372358
+}
