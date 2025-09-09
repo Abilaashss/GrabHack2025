@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { 
   ChartBarIcon,
   ArrowTrendingUpIcon as TrendingUpIcon,
+  ArrowTrendingUpIcon,
   UsersIcon,
   CurrencyDollarIcon,
   StarIcon,
@@ -77,11 +78,11 @@ export default function AnalyticsDashboard() {
 
   // Credit Score Distribution with better ranges
   const scoreRanges = [
-    { range: 'Poor (300-499)', count: 0, color: '#ef4444' },
-    { range: 'Fair (500-599)', count: 0, color: '#f59e0b' },
-    { range: 'Good (600-699)', count: 0, color: '#0ea5e9' },
-    { range: 'Very Good (700-799)', count: 0, color: '#10b981' },
-    { range: 'Excellent (800+)', count: 0, color: '#22c55e' },
+    { range: 'Poor (300-499)', count: 0, color: '#ef4444', drivers: 0, merchants: 0 },
+    { range: 'Fair (500-599)', count: 0, color: '#f59e0b', drivers: 0, merchants: 0 },
+    { range: 'Good (600-699)', count: 0, color: '#0ea5e9', drivers: 0, merchants: 0 },
+    { range: 'Very Good (700-799)', count: 0, color: '#10b981', drivers: 0, merchants: 0 },
+    { range: 'Excellent (800+)', count: 0, color: '#22c55e', drivers: 0, merchants: 0 },
   ]
 
   // For overview, show both drivers and merchants
@@ -206,121 +207,236 @@ export default function AnalyticsDashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Header with View Selector */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Analytics Dashboard</h2>
-          <p className="text-slate-600 dark:text-slate-400 mt-1">Comprehensive insights into partner performance and credit scoring</p>
+      {/* Premium Header with View Selector */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 mb-12"
+      >
+        <div className="space-y-2">
+          <h2 className="text-4xl font-bold gradient-text text-shadow-premium">
+            Analytics Dashboard
+          </h2>
+          <p className="text-lg text-slate-600 dark:text-slate-400 font-medium">
+            Real-time insights powered by advanced machine learning
+          </p>
+          <div className="flex items-center space-x-4 text-sm text-slate-500 dark:text-slate-500">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-emerald-500 rounded-full pulse-glow"></div>
+              <span>Live Data</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span>{filteredUsers.length.toLocaleString()} Records</span>
+            </div>
+          </div>
         </div>
         
-        <div className="flex bg-white dark:bg-slate-800 rounded-xl p-1 shadow-sm border border-slate-200 dark:border-slate-700 transition-colors">
-          {[
-            { id: 'overview', label: 'Overview', icon: ChartBarIcon },
-            { id: 'drivers', label: 'Drivers', icon: TruckIcon },
-            { id: 'merchants', label: 'Merchants', icon: BuildingStorefrontIcon }
-          ].map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              onClick={() => setSelectedView(id as any)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${
-                selectedView === id
-                  ? 'bg-primary-500 dark:bg-primary-600 text-white shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
-              }`}
-            >
-              <Icon className="w-4 h-4" />
-              <span>{label}</span>
-            </button>
-          ))}
+        <div className="premium-card p-2 border border-slate-200/50 dark:border-slate-700/50">
+          <div className="flex space-x-1">
+            {[
+              { id: 'overview', label: 'Overview', icon: ChartBarIcon, color: 'from-slate-500 to-slate-600' },
+              { id: 'drivers', label: 'Drivers', icon: TruckIcon, color: 'from-blue-500 to-blue-600' },
+              { id: 'merchants', label: 'Merchants', icon: BuildingStorefrontIcon, color: 'from-emerald-500 to-emerald-600' }
+            ].map(({ id, label, icon: Icon, color }) => (
+              <motion.button
+                key={id}
+                onClick={() => setSelectedView(id as any)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={`relative flex items-center space-x-3 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                  selectedView === id
+                    ? `bg-gradient-to-r ${color} text-white shadow-lg`
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                }`}
+              >
+                <div className={`p-1 rounded-lg transition-all duration-300 ${
+                  selectedView === id 
+                    ? 'bg-white/20' 
+                    : 'bg-slate-100 dark:bg-slate-700'
+                }`}>
+                  <Icon className="w-4 h-4" />
+                </div>
+                <span>{label}</span>
+                {selectedView === id && (
+                  <motion.div
+                    layoutId="activeView"
+                    className={`absolute inset-0 bg-gradient-to-r ${color} rounded-xl -z-10`}
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+              </motion.button>
+            ))}
+          </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Key Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Premium Key Metrics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="premium-card rounded-2xl p-6"
+          className="group premium-card rounded-2xl p-8 hover-lift interactive-element"
         >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Average Credit Score</p>
-              <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">{avgCreditScore.toFixed(0)}</p>
-              <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium mt-1">+2.3% from last month</p>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <div className="flex items-center space-x-2 mb-2">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                  Average Credit Score
+                </p>
+              </div>
+              <p className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+                {avgCreditScore.toFixed(0)}
+              </p>
+              <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-1 px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
+                  <ArrowTrendingUpIcon className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                  <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">+2.3%</span>
+                </div>
+                <span className="text-xs text-slate-500 dark:text-slate-500">vs last month</span>
+              </div>
             </div>
-            <div className="p-3 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl">
-              <ChartBarIcon className="w-6 h-6 text-white" />
+            <div className="p-4 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300">
+              <ChartBarIcon className="w-7 h-7 text-white" />
             </div>
           </div>
+          <div className="h-1 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full"></div>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="premium-card rounded-2xl p-6"
+          className="group premium-card rounded-2xl p-8 hover-lift interactive-element"
         >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">High Performers</p>
-              <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">{highPerformers.toLocaleString()}</p>
-              <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium mt-1">Credit Score ≥ 700</p>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <div className="flex items-center space-x-2 mb-2">
+                <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                  High Performers
+                </p>
+              </div>
+              <p className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+                {highPerformers.toLocaleString()}
+              </p>
+              <div className="flex items-center space-x-2">
+                <div className="px-2 py-1 bg-primary-100 dark:bg-primary-900/30 rounded-full">
+                  <span className="text-xs font-semibold text-primary-600 dark:text-primary-400">Score ≥ 700</span>
+                </div>
+              </div>
             </div>
-            <div className="p-3 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl">
-              <TrendingUpIcon className="w-6 h-6 text-white" />
+            <div className="p-4 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300">
+              <ArrowTrendingUpIcon className="w-7 h-7 text-white" />
             </div>
           </div>
+          <div className="h-1 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full"></div>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="premium-card rounded-2xl p-6"
+          className="group premium-card rounded-2xl p-8 hover-lift interactive-element"
         >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Total Revenue</p>
-              <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">${(totalRevenue / 1000000).toFixed(1)}M</p>
-              <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium mt-1">Monthly combined</p>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <div className="flex items-center space-x-2 mb-2">
+                <div className="w-2 h-2 bg-accent-500 rounded-full"></div>
+                <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                  Total Revenue
+                </p>
+              </div>
+              <p className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+                ${(totalRevenue / 1000000).toFixed(1)}M
+              </p>
+              <div className="flex items-center space-x-2">
+                <div className="px-2 py-1 bg-accent-100 dark:bg-accent-900/30 rounded-full">
+                  <span className="text-xs font-semibold text-accent-600 dark:text-accent-400">Monthly</span>
+                </div>
+              </div>
             </div>
-            <div className="p-3 bg-gradient-to-br from-accent-500 to-accent-600 rounded-xl">
-              <BanknotesIcon className="w-6 h-6 text-white" />
+            <div className="p-4 bg-gradient-to-br from-accent-500 to-accent-600 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300">
+              <BanknotesIcon className="w-7 h-7 text-white" />
             </div>
           </div>
+          <div className="h-1 bg-gradient-to-r from-accent-500 to-accent-600 rounded-full"></div>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="premium-card rounded-2xl p-6"
+          className="group premium-card rounded-2xl p-8 hover-lift interactive-element"
         >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">Average Rating</p>
-              <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">{avgRating.toFixed(1)}</p>
-              <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium mt-1">Out of 5.0 stars</p>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <div className="flex items-center space-x-2 mb-2">
+                <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                  Average Rating
+                </p>
+              </div>
+              <p className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+                {avgRating.toFixed(1)}
+              </p>
+              <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-1">
+                  {[...Array(5)].map((_, i) => (
+                    <StarIcon 
+                      key={i} 
+                      className={`w-3 h-3 ${i < Math.floor(avgRating) ? 'text-amber-400 fill-current' : 'text-slate-300'}`} 
+                    />
+                  ))}
+                </div>
+                <span className="text-xs text-slate-500 dark:text-slate-500">out of 5.0</span>
+              </div>
             </div>
-            <div className="p-3 bg-gradient-to-br from-grab-500 to-grab-600 rounded-xl">
-              <StarIcon className="w-6 h-6 text-white" />
+            <div className="p-4 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300">
+              <StarIcon className="w-7 h-7 text-white" />
             </div>
           </div>
+          <div className="h-1 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full"></div>
         </motion.div>
       </div>
 
-      {/* Credit Score Distribution */}
+      {/* Premium Credit Score Distribution */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.4 }}
-        className="premium-card rounded-2xl p-8"
+        className="premium-card rounded-3xl p-10 hover-lift"
       >
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">Credit Score Distribution</h3>
-            <p className="text-slate-600 dark:text-slate-400 mt-1">Distribution across different credit score ranges</p>
+        <div className="flex items-center justify-between mb-10">
+          <div className="space-y-2">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl">
+                <ChartBarIcon className="w-5 h-5 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Credit Score Distribution</h3>
+            </div>
+            <p className="text-slate-600 dark:text-slate-400 text-lg">
+              Real-time analysis across {selectedView === 'overview' ? 'all partners' : selectedView}
+            </p>
+            <div className="flex items-center space-x-4 text-sm">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                <span className="text-slate-500">Drivers</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
+                <span className="text-slate-500">Merchants</span>
+              </div>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-3xl font-bold text-slate-900 dark:text-slate-100">
+              {filteredUsers.length.toLocaleString()}
+            </div>
+            <div className="text-sm text-slate-500">Total Records</div>
           </div>
         </div>
         <div className="h-80">
@@ -566,7 +682,7 @@ export default function AnalyticsDashboard() {
                   domain={[0, 1]}
                 />
                 <Tooltip 
-                  formatter={(value) => [`${(value * 100).toFixed(1)}%`, 'Adoption Rate']}
+                  formatter={(value) => [`${(Number(value) * 100).toFixed(1)}%`, 'Adoption Rate']}
                 />
                 <Line 
                   type="monotone" 

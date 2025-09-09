@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { 
+import {
   UsersIcon,
   TruckIcon,
   BuildingStorefrontIcon,
@@ -97,7 +97,7 @@ export default function SystemOverview() {
                 <div>
                   <p className="text-sm font-medium text-gray-600">{card.title}</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {typeof card.value === 'number' && card.title.includes('Score') 
+                    {typeof card.value === 'number' && card.title.includes('Score')
                       ? card.value.toFixed(0)
                       : card.value.toLocaleString()
                     }

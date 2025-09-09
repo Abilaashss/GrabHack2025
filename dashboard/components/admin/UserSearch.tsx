@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { 
   MagnifyingGlassIcon,
@@ -10,6 +10,7 @@ import {
   EyeIcon
 } from '@heroicons/react/24/outline'
 import { searchUsers } from '@/lib/dataService'
+import { useDebounce } from '@/lib/hooks'
 
 export default function UserSearch() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -17,25 +18,83 @@ export default function UserSearch() {
   const [loading, setLoading] = useState(false)
   const [selectedType, setSelectedType] = useState<'Driver' | 'Merchant'>('Driver')
   const [selectedUser, setSelectedUser] = useState<any>(null)
+  const [hasSearched, setHasSearched] = useState(false)
 
-  const handleSearch = async () => {
-    if (!searchTerm.trim()) {
-      // Load all users if no search term
-      const results = await searchUsers('', selectedType)
-      setSearchResults(results)
+  // Debounced search function
+  const debouncedSearch = useDebounce(async (term: string) => {
+    if (term.length >= 1) {
+      await performSearch(term)
+    }
+  }, 300)
+
+  // Real-time search as user types
+  const handleInputChange = async (value: string) => {
+    setSearchTerm(value)
+    setHasSearched(false)
+    
+    if (!value.trim()) {
+      // Load some default users when search is cleared
+      await loadDefaultUsers()
       return
     }
+
+    // Use debounced search for performance
+    debouncedSearch(value)
+  }
+
+  const loadDefaultUsers = async () => {
+    try {
+      const response = await fetch(`/api/search?search=&type=${selectedType}`)
+      const result = await response.json()
+      if (result.success) {
+        setSearchResults(result.data.slice(0, 20)) // Show first 20 users
+      }
+    } catch (error) {
+      console.error('Load default users error:', error)
+    }
+  }
+
+  const handleSearch = async () => {
+    setHasSearched(true)
+    await performSearch(searchTerm)
+  }
+
+  const performSearch = async (term: string) => {
+    if (loading) return
     
     setLoading(true)
     try {
-      const results = await searchUsers(searchTerm, selectedType)
-      setSearchResults(results)
+      // Use the enhanced search API
+      const response = await fetch(`/api/search?search=${encodeURIComponent(term)}&type=${selectedType}`)
+      const result = await response.json()
+      
+      if (result.success) {
+        setSearchResults(result.data)
+      } else {
+        console.error('Search API Error:', result)
+        // Fallback to original search method
+        const results = await searchUsers(term, selectedType)
+        setSearchResults(results)
+      }
     } catch (error) {
       console.error('Search error:', error)
+      // Fallback to original search method
+      try {
+        const results = await searchUsers(term, selectedType)
+        setSearchResults(results)
+      } catch (fallbackError) {
+        console.error('Fallback search error:', fallbackError)
+        setSearchResults([])
+      }
     } finally {
       setLoading(false)
     }
   }
+
+  // Load default users on component mount and type change
+  useEffect(() => {
+    loadDefaultUsers()
+  }, [selectedType])
 
   const handleUserSelect = (user: any) => {
     setSelectedUser(user)
@@ -71,11 +130,24 @@ export default function UserSearch() {
       transition={{ duration: 0.5 }}
       className="space-y-6"
     >
-      {/* Search Interface */}
-      <div className="bg-white rounded-xl p-6 card-shadow-lg">
-        <div className="flex items-center space-x-3 mb-6">
-          <MagnifyingGlassIcon className="w-6 h-6 text-primary-500" />
-          <h3 className="text-xl font-semibold text-gray-900">User Search & Management</h3>
+      {/* Premium Search Interface */}
+      <div className="premium-card rounded-3xl p-10 hover-lift">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center space-x-4">
+            <div className="p-3 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl shadow-lg">
+              <MagnifyingGlassIcon className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Advanced User Search</h3>
+              <p className="text-slate-600 dark:text-slate-400">Intelligent partner discovery and analysis</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+              {searchResults.length} Results
+            </span>
+          </div>
         </div>
 
         <div className="space-y-4">
@@ -84,23 +156,28 @@ export default function UserSearch() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Search Users
               </label>
-              <div className="relative">
+              <div className="relative group">
                 <input
                   type="text"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => handleInputChange(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  placeholder="Enter Partner ID or search term..."
-                  className="w-full pl-4 pr-12 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white text-slate-900 placeholder-slate-500 transition-all"
-                  style={{ color: '#1e293b !important', backgroundColor: '#ffffff !important' }}
+                  placeholder="Search by Partner ID, name, or any criteria..."
+                  className="w-full pl-6 pr-16 py-4 text-lg bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400"
                 />
                 <button
                   onClick={handleSearch}
                   disabled={loading}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 text-slate-400 hover:text-primary-500 transition-colors"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl hover:shadow-lg transition-all duration-300 hover:scale-105 disabled:opacity-50"
                 >
-                  <MagnifyingGlassIcon className="w-5 h-5" />
+                  {loading ? (
+                    <div className="loading-spinner w-5 h-5"></div>
+                  ) : (
+                    <MagnifyingGlassIcon className="w-5 h-5" />
+                  )}
                 </button>
+                {/* Search suggestions overlay */}
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-500/10 to-emerald-500/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 -z-10 blur-sm"></div>
               </div>
             </div>
 
@@ -108,28 +185,34 @@ export default function UserSearch() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 User Type
               </label>
-              <div className="flex space-x-2">
+              <div className="flex space-x-2 p-2 bg-slate-100/50 dark:bg-slate-800/50 rounded-2xl backdrop-blur-sm">
                 <button
                   onClick={() => setSelectedType('Driver')}
-                  className={`flex items-center space-x-2 px-4 py-3 rounded-xl font-medium transition-all ${
+                  className={`flex items-center space-x-3 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                     selectedType === 'Driver'
-                      ? 'bg-accent-500 text-white shadow-sm'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                      ? 'bg-gradient-to-r from-accent-500 to-accent-600 text-white shadow-lg hover:shadow-xl'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:shadow-md'
                   }`}
                 >
-                  <TruckIcon className="w-4 h-4" />
+                  <TruckIcon className="w-5 h-5" />
                   <span>Drivers</span>
+                  {selectedType === 'Driver' && (
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                  )}
                 </button>
                 <button
                   onClick={() => setSelectedType('Merchant')}
-                  className={`flex items-center space-x-2 px-4 py-3 rounded-xl font-medium transition-all ${
+                  className={`flex items-center space-x-3 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                     selectedType === 'Merchant'
-                      ? 'bg-primary-500 text-white shadow-sm'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                      ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg hover:shadow-xl'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:shadow-md'
                   }`}
                 >
-                  <BuildingStorefrontIcon className="w-4 h-4" />
+                  <BuildingStorefrontIcon className="w-5 h-5" />
                   <span>Merchants</span>
+                  {selectedType === 'Merchant' && (
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                  )}
                 </button>
               </div>
             </div>
@@ -186,9 +269,15 @@ export default function UserSearch() {
                 </div>
               ))}
 
-              {searchResults.length === 0 && !loading && (
+              {searchResults.length === 0 && !loading && hasSearched && searchTerm && (
                 <div className="text-center py-8 text-gray-500">
-                  No users found. Try a different search term or load all users.
+                  No users found for "{searchTerm}". Try a different search term.
+                </div>
+              )}
+              
+              {searchResults.length === 0 && !loading && !hasSearched && !searchTerm && (
+                <div className="text-center py-8 text-gray-500">
+                  Enter a Partner ID or search term to find users.
                 </div>
               )}
             </div>

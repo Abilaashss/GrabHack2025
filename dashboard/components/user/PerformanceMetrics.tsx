@@ -94,14 +94,15 @@ export default function PerformanceMetrics({ user, detailed = false }: Performan
     },
   ]
 
-  const formatMetricValue = (value: number, format: string) => {
+  const formatMetricValue = (value: any, format: string) => {
+    const numValue = Number(value) || 0
     switch (format) {
       case 'percentage':
-        return `${(value * 100).toFixed(1)}%`
+        return `${(numValue * 100).toFixed(1)}%`
       case 'minutes':
-        return `${value.toFixed(0)} min`
+        return `${numValue.toFixed(0)} min`
       default:
-        return value.toFixed(1)
+        return numValue.toFixed(1)
     }
   }
 
