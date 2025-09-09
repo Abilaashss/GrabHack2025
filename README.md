@@ -189,23 +189,88 @@ yarn dev
 - **Parameter Analysis**: Detailed breakdown of all 25+ factors affecting scores
 - **Model Comparison**: Compare predictions across 8 different ML models
 - **Performance Trends**: Historical performance tracking and insights
+- **Partner-Specific Analysis**: Detailed insights for specific partner performance
 - **Mobile Responsive**: Optimized for all device sizes
 
 #### **Admin Dashboard** (`/admin`)
-- **Analytics Overview**: Real-time filtering by drivers/merchants/overview
+- **Analytics Overview**: Real-time filtering by drivers/merchants/overview with 200,000+ records
 - **Advanced Analytics**: Risk distribution, earnings correlation, digital adoption trends
-- **Model Management**: Performance monitoring with actual evaluation metrics
-- **Visualization Viewer**: Click-to-view actual model plots and charts
+- **Model Management**: Enhanced performance monitoring with prominent R² score displays
+- **Visualization Viewer**: Click-to-view actual model plots with improved modals and close functionality
 - **User Search**: Advanced search and filtering across all users
 - **System Monitoring**: Real-time system health and performance metrics
+- **AI-Powered Chat**: Portfolio-wide queries about any partner without specific partner ID requirements
+- **Data Insights**: Real-time access to comprehensive dataset analytics and performance optimization suggestions
 
 #### **Premium Features**
 - **Dark/Light Mode**: Professional theme switching with green accents
-- **Real-Time Data**: Live integration with actual CSV data and model results
+- **Real-Time Data**: Live integration with actual CSV data (200,000+ records) and model results
 - **Interactive Charts**: 15+ chart types with dynamic filtering
 - **Working Visualizations**: Actual PNG/HTML plots from ML pipeline results
+- **AI Chat Integration**: Intelligent chatbot with role-based access (admin portfolio-wide queries, user partner-specific)
+- **Enhanced Model Management**: Prominent R² score displays, improved modal interactions with multiple close options
+- **Advanced Data Loading**: Server-side direct CSV processing with fallback client-side loading
 
-## 🤖 Machine Learning Models & Performance
+## 🤖 **AI-Powered Analytics Chat**
+
+### 🧠 **Intelligent Query System**
+
+The dashboard features an advanced AI chatbot with role-based access and comprehensive data analytics capabilities.
+
+#### **Admin Chat Features**
+- **Portfolio-Wide Queries**: Access insights about any partner without requiring specific partner IDs
+- **Comprehensive Data Analysis**: Real-time analysis of 200,000+ driver and merchant records
+- **Performance Optimization**: AI-powered suggestions for improving partner performance
+- **Bias Detection**: Automated fairness analysis and bias detection across demographics
+- **Risk Assessment**: Intelligent risk categorization and mitigation strategies
+- **Trend Analysis**: Identification of performance patterns and market trends
+
+#### **User Chat Features**
+- **Partner-Specific Insights**: Detailed analysis for specific partner performance
+- **Personalized Recommendations**: Tailored optimization suggestions based on partner data
+- **Performance Benchmarking**: Compare partner metrics against industry standards
+- **Goal Setting**: AI-assisted target setting and progress tracking
+
+#### **Chat Capabilities**
+- **Natural Language Processing**: Conversational interface for complex data queries
+- **Real-Time Data Access**: Direct integration with CSV datasets and model results
+- **Contextual Responses**: Intelligent responses based on user role and data context
+- **Fallback Systems**: Robust fallback mechanisms ensuring consistent responses
+- **Multi-Modal Analysis**: Support for text queries with chart and visualization responses
+
+### 🎯 **Example Queries**
+
+#### **Admin Queries**
+- "What are the top performing drivers by credit score?"
+- "Show me bias analysis across different ethnic groups"
+- "Which merchants have the highest risk profiles?"
+- "Compare performance between urban and rural partners"
+- "What optimization strategies work best for low-performing partners?"
+
+#### **User Queries**
+- "How is my partner performing compared to industry benchmarks?"
+- "What factors are affecting my partner's credit score the most?"
+- "Show me trend analysis for the past quarter"
+- "What recommendations do you have for improving performance?"
+
+## 🎯 **Enhanced Model Management Interface**
+
+The admin dashboard features an advanced model management system with comprehensive performance monitoring and improved user experience.
+
+### **Enhanced Display Features**
+- **Prominent R² Scores**: Large, clearly visible R² score displays with color-coded performance indicators
+- **Interactive Model Cards**: Hover effects and detailed performance metrics on mouse interaction
+- **Improved Modals**: Enhanced modal windows with multiple close options (close button, ESC key, click-outside-to-close)
+- **Real-Time Metrics**: Live integration with actual model evaluation results from pipeline
+- **Performance Comparison**: Side-by-side model comparison with visual performance indicators
+- **Export Functionality**: Download model performance reports and visualizations
+
+### **User Experience Improvements**
+- **Accessibility**: Full keyboard navigation support and screen reader compatibility
+- **Responsive Design**: Optimized for all screen sizes from mobile to desktop
+- **Loading States**: Smooth loading animations and progress indicators
+- **Error Handling**: Graceful error handling with user-friendly messages
+- **Theme Integration**: Consistent dark/light mode support across all components
 
 ### 🏆 **Model Performance Results**
 
@@ -614,6 +679,60 @@ async def predict_credit_score(features: UserFeatures):
         raise HTTPException(status_code=400, detail=str(e))
 ```
 
+## 🏗️ **Current Implementation Architecture**
+
+### 📊 **Data Processing Pipeline**
+
+#### **Data Loading System**
+- **Server-Side Processing**: Direct file system access for production environments
+- **Client-Side Fallback**: Browser-based Papa Parse for development environments
+- **Conditional Loading**: Automatic detection of environment and appropriate loading method
+- **Error Handling**: Comprehensive error handling with graceful fallbacks
+
+#### **Data Sources**
+- `grab_drivers_dataset_refined_score.csv` - 100,000 driver records with credit scores
+- `grab_merchants_dataset_refined_score.csv` - 100,000 merchant records with credit scores
+- Real-time processing of 200,000+ total records
+- Automatic data validation and cleaning
+
+### 🤖 **AI Chat System Architecture**
+
+#### **Role-Based Access Control**
+- **Admin Access**: Portfolio-wide queries without partner ID requirements
+- **User Access**: Partner-specific queries with ID-based filtering
+- **Context Management**: Intelligent context creation based on user role
+
+#### **LLM Integration**
+- **Primary Service**: Hugging Face API integration
+- **Fallback System**: Comprehensive fallback responses for API failures
+- **Query Processing**: Natural language processing with structured responses
+- **Data Integration**: Real-time access to CSV datasets and model results
+
+#### **Response Generation**
+- **Contextual Analysis**: Role-based context creation from data
+- **Insight Extraction**: Automated extraction of key performance insights
+- **Recommendation Engine**: AI-powered optimization suggestions
+- **Multi-Modal Responses**: Text responses with chart and visualization support
+
+### 🎨 **Frontend Architecture**
+
+#### **Component Structure**
+- **Admin Dashboard**: Enhanced model management with prominent R² displays
+- **User Portal**: Partner-specific analytics and insights
+- **Shared Components**: Reusable UI components with consistent design
+- **Theme System**: Dark/light mode with professional green accents
+
+#### **State Management**
+- **React Hooks**: Advanced state management with custom hooks
+- **Context API**: Theme and user context management
+- **Local Storage**: Persistent user preferences and settings
+
+#### **UI/UX Enhancements**
+- **Modal System**: Improved modals with multiple close options
+- **Keyboard Navigation**: Full accessibility support
+- **Responsive Design**: Optimized for all device sizes
+- **Loading States**: Smooth animations and progress indicators
+
 ## 🛠️ Technology Stack
 
 ### 🐍 **Machine Learning Stack**
@@ -630,20 +749,23 @@ async def predict_credit_score(features: UserFeatures):
 - **Plotly** - Interactive visualizations
 
 ### 🌐 **Dashboard Stack**
-- **Next.js 14** - React framework with App Router
-- **React 18** - Frontend library with hooks
-- **TypeScript** - Type-safe JavaScript
-- **Tailwind CSS** - Utility-first CSS framework
-- **Framer Motion** - Animation library
-- **Recharts** - Chart library for React
-- **Heroicons** - Icon library
-- **Papa Parse** - CSV parsing library
+- **Next.js 14** - React framework with App Router and server-side rendering
+- **React 18** - Frontend library with hooks and advanced state management
+- **TypeScript** - Type-safe JavaScript with comprehensive type definitions
+- **Tailwind CSS** - Utility-first CSS framework with custom theme configuration
+- **Framer Motion** - Animation library for smooth transitions and interactions
+- **Recharts** - Chart library for React with extensive customization options
+- **Heroicons** - Professional icon library with consistent design
+- **Papa Parse** - High-performance CSV parsing library for client and server-side processing
+- **AI Integration** - Custom LLM service with role-based access and contextual responses
 
 ### 🗄️ **Data & Storage**
-- **CSV Files** - Primary data storage (3,600+ records)
-- **JSON** - Configuration and results storage
-- **Pickle/Joblib** - Model serialization
-- **Local Storage** - Browser-based theme persistence
+- **CSV Files** - Primary data storage (200,000+ records: 100K drivers + 100K merchants)
+- **Server-Side Processing** - Direct file system access for efficient data loading
+- **Client-Side Fallback** - Browser-based CSV parsing for development environments
+- **JSON** - Configuration and results storage with structured data formats
+- **Pickle/Joblib** - Model serialization and deployment artifacts
+- **Local Storage** - Browser-based theme persistence and user preferences
 
 ### 🔧 **Development Tools**
 - **Git** - Version control with comprehensive .gitignore
@@ -793,7 +915,7 @@ All operations are logged to:
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 📈 Project Achievements
+### 📈 **Project Achievements**
 
 ### 🏆 **Outstanding Results**
 - **99.99% Accuracy** - MLP Regressor achieves near-perfect credit score prediction
@@ -801,15 +923,18 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - **Comprehensive Fairness** - Extensive bias analysis across all protected attributes
 - **Production Ready** - Complete deployment pipeline with monitoring
 - **Interactive Dashboard** - Professional analytics interface with real-time data
+- **AI-Powered Analytics** - Advanced chatbot with portfolio-wide query capabilities
+- **Enhanced UI/UX** - Improved model management with prominent metrics display
 
 ### 📊 **Key Metrics Summary**
-- **3,600+ Records** - Comprehensive dataset covering drivers and merchants
+- **200,000+ Records** - Comprehensive dataset covering 100K drivers and 100K merchants
 - **8 ML Models** - From linear regression to deep neural networks
 - **30+ Evaluation Metrics** - Comprehensive performance assessment
 - **50+ Visualizations** - Static and interactive analysis tools
 - **15+ Dashboard Charts** - Real-time analytics with filtering
 - **5 Protected Attributes** - Comprehensive fairness analysis
 - **Dark/Light Mode** - Professional UI with accessibility features
+- **Portfolio-Wide Chat** - Admin access to all partner data without ID requirements
 
 ### 🎯 **Business Impact**
 - **Risk Assessment** - Accurate identification of high-risk users (99%+ recall)
@@ -817,6 +942,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - **Operational Efficiency** - Automated scoring with confidence intervals
 - **Regulatory Compliance** - Comprehensive fairness documentation
 - **Scalable Architecture** - Production-ready deployment pipeline
+- **Enhanced Decision Making** - AI-powered insights for portfolio management
+- **Improved User Experience** - Intuitive interface with advanced interaction capabilities
 
 ## 🔮 Future Enhancements
 
@@ -828,6 +955,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - **Mobile App** - Native mobile application for users
 - **API Rate Limiting** - Production-grade API management
 - **Multi-language Support** - Internationalization for global deployment
+- **Enhanced Chat AI** - Advanced conversational AI with multi-modal responses
+- **Real-Time Collaboration** - Multi-user dashboard with live updates
 
 ### 🔬 **Research Directions**
 - **Federated Learning** - Privacy-preserving model training
@@ -926,10 +1055,17 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 **Empowering fair, accurate, and transparent credit scoring for the digital economy with cutting-edge machine learning, comprehensive fairness analysis, and professional analytics dashboard.**
 
-### 🚀 **Ready to Get Started?**
-1. **Quick Start**: `python quick_start.py` - Get results in minutes
+### **Ready to Get Started?**
+1. **Quick Start**: `python quick_start.py` - Get ML results in minutes
 2. **Full Pipeline**: `python main_training_pipeline.py` - Complete analysis
-3. **Dashboard**: `cd dashboard && npm run dev` - Interactive analytics
+3. **Dashboard**: `cd dashboard && npm run dev` - Interactive analytics with AI chat
 4. **Deploy**: `python deploy_model.py` - Production deployment
+
+**Key Highlights:**
+- ✅ **200,000+ Records**: Comprehensive driver and merchant datasets
+- ✅ **AI-Powered Chat**: Portfolio-wide admin queries and partner-specific user insights
+- ✅ **Enhanced UI**: Prominent R² scores, improved modals, and accessibility features
+- ✅ **Real-Time Data**: Server-side processing with client-side fallbacks
+- ✅ **Production Ready**: Complete deployment pipeline with monitoring
 
 **Transform your credit scoring with Project Nova today!** 🌟
